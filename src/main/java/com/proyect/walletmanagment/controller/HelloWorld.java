@@ -10,6 +10,6 @@ public class HelloWorld {
 
     @RequestMapping(method = RequestMethod.GET)
     public String sayHello(){
-        return "Hello World";
+        return "Hello Worlddd";
     }
 }
