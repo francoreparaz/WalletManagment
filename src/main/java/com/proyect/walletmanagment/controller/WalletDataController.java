@@ -5,6 +5,7 @@ import com.proyect.walletmanagment.service.WalletDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,17 +19,17 @@ public class WalletDataController {
     private final WalletDataService walletDataService;
 
     @Autowired
-    public WalletDataController(WalletDataService walletDataService){
+    public WalletDataController(WalletDataService walletDataService) {
         this.walletDataService = walletDataService;
     }
 
     @GetMapping
-    public List<WalletData>getWalletData(){
+    public List<WalletData> getWalletData() {
         return walletDataService.getWalletData();
     }
 
-    @PostMapping
-    public void insertDataInWallet(WalletData walletData){
-       walletDataService.insertDataInWallet(walletData);
+    @PostMapping(path = "/save")
+    public void insertDataInWallet(@RequestBody WalletData walletData) {
+        walletDataService.insertDataInWallet(walletData);
     }
 }
