@@ -14,17 +14,16 @@ public class WalletDataService {
     private final WalletDataRepository walletDataRepository;
 
     @Autowired
-    public WalletDataService (WalletDataRepository walletDataRepository){
+    public WalletDataService(WalletDataRepository walletDataRepository) {
         this.walletDataRepository = walletDataRepository;
     }
 
-    public List getWalletData() {
+    public List<WalletData> getWalletData() {
         return walletDataRepository.findAll();
     }
 
     public void insertDataInWallet(WalletData walletData) {
-        
+        walletDataRepository.save(walletData);
     }
-
 
 }
