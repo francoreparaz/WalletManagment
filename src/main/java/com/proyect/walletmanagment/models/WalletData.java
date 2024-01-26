@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table
+@Table(name = "wallet_data")
 public class WalletData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
