@@ -39,7 +39,6 @@ public class JwtValidation extends OncePerRequestFilter {
             if (token != null && token.startsWith("Bearer ")) {
                 String jwtToken = token.substring(7);
                 Claims claims = validateToken(jwtToken);
-
                 UserDetails userDetails = new UserData(claims.getSubject());
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -48,13 +47,14 @@ public class JwtValidation extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            System.out.println(e);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
     public Claims validateToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(authJWT.getSecret())
+                .setSigningKey(authJWT.secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

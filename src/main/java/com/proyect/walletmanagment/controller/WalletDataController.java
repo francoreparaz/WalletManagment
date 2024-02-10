@@ -1,7 +1,11 @@
 package com.proyect.walletmanagment.controller;
 
+import com.proyect.walletmanagment.Middleware.JwtValidation;
 import com.proyect.walletmanagment.models.WalletData;
 import com.proyect.walletmanagment.service.WalletDataService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +23,9 @@ public class WalletDataController {
     private final WalletDataService walletDataService;
 
     @Autowired
+    private JwtValidation jwtValidation;
+
+    @Autowired
     public WalletDataController(WalletDataService walletDataService) {
         this.walletDataService = walletDataService;
     }
@@ -29,7 +36,16 @@ public class WalletDataController {
     }
 
     @PostMapping(path = "/save")
-    public void insertDataInWallet(@RequestBody WalletData walletData) {
-        walletDataService.insertDataInWallet(walletData);
+    public void insertDataInWallet(@RequestBody WalletData walletData, HttpServletRequest request) {
+        try {
+            String authorizationHeader = request.getHeader("Authorization").substring(7);
+            Long userId = jwtValidation.validateToken(authorizationHeader).get("userId", Long.class);
+            walletData.setUserId(userId);
+            walletData.setDate(new Date());
+            walletDataService.insertDataInWallet(walletData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e);
+        }
     }
 }
