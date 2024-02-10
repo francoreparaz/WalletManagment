@@ -42,18 +42,22 @@ public class AuthService {
     }
 
     public String loginUser(UserData user) throws Exception {
-        if (user.getPassword() != null) {
-            System.out.println("USER PASSWORD INGRESADA: " + user.getPassword());
-            UserData user_db = userRepository.findByUsername(user.getUsername());
-            if (user_db != null
-                    && passwordEncoder.matches(user.getPassword(), user_db.getPassword())) {
-                System.out.println("Las contraseñas coinciden");
-                String create_token = authJWT.createToken(user.getUsername());
-                token.setToken(create_token);
-                return create_token;
+        try {
+            if (user.getPassword() != null) {
+                UserData user_db = userRepository.findByUsername(user.getUsername());
+                if (user_db != null
+                        && passwordEncoder.matches(user.getPassword(), user_db.getPassword())) {
+                    String create_token = authJWT.createToken(user_db.getId());
+                    token.setToken(create_token);
+                    return create_token;
+                }
+                throw new Exception();
             }
             throw new Exception();
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e);
+            return e.getMessage();
         }
-        throw new Exception();
     }
 }
