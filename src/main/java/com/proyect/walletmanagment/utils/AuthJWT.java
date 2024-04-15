@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class AuthJWT {
 
-    private Key secretKey;
+    public Key secretKey;
     private final long validityInMilliseconds = 3600000; // 1 hora
 
     @PostConstruct
@@ -30,19 +30,15 @@ public class AuthJWT {
         return new javax.crypto.spec.SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());
     }
 
-    public String createToken(String username) {
+    public String createToken(Long userID) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
-
+        Date validity = new Date(now.getTime() + this.validityInMilliseconds);
+        System.out.println(this.secretKey);
         return Jwts.builder()
-                .setSubject(username)
+                .claim("userId", userID)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
-    }
-
-    public Key getSecret() {
-        return this.secretKey;
     }
 }
